@@ -14,7 +14,7 @@
       <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
         *ngFor="let category of categories; let i = index">
 
-        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white min-w-52">
           <input *ngIf="category.isNew" [(ngModel)]="category.categoryName" 
             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             placeholder="Enter category name" 
@@ -23,7 +23,7 @@
         </th>
 
         <ng-container *ngFor="let month of months; let j = index">
-          <td (contextmenu)="openContextMenu($event, i, j)" class="px-6 py-4">
+          <td (contextmenu)="openContextMenu($event, i, j)" class="px-6 py-4 min-w-52">
             <input [(ngModel)]="category.values[j]" (keydown)="handleNavigation($event, i, j)"
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
             <div *ngIf="contextMenuVisible" [style.top]="contextMenuPosition.y" [style.left]="contextMenuPosition.x"
@@ -33,7 +33,7 @@
           </td>
         </ng-container>
 
-        <td class="px-6 py-4">{{ calculateRowTotal(category) }}</td>
+        <td class="px-6 py-4 min-w-52">{{ calculateRowTotal(category) }}</td>
         <td class="px-6 py-4">
           <button *ngIf="!category.isNew" (click)="deleteCategoryRow(i)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
             Delete
@@ -45,9 +45,9 @@
 
     <tfoot>
       <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-        <td class="px-6 py-4">Subtotal</td>
+        <td class="px-6 py-4 min-w-52">Subtotal</td>
         <td *ngFor="let month of months; let j = index" class="px-6 py-4">{{ getColumnSubtotal(j) }}</td>
-        <td class="px-6 py-4">{{ getOverallTotal() }}</td>
+        <td class="px-6 py-4 min-w-52">{{ getOverallTotal() }}</td>
         <td class="px-6 py-4"></td>
       </tr>
     </tfoot>
