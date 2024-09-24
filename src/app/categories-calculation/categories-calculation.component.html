@@ -1,0 +1,121 @@
+<!-- <div class="relative mx-auto mt-10 overflow-x-auto">
+  <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <tr>
+        <th ccope="col" class="px-6 py-3">Parent category</th>
+        <th ccope="col" class="px-6 py-3">Category</th>
+        <th *ngFor="let month of months" ccope="col" class="px-6 py-3">{{ month }}</th>
+        <th ccope="col" class="px-6 py-3">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+        *ngFor="let category of categories; let i = index">
+
+        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+          <input *ngIf="category.isNew" [(ngModel)]="category.parentName" 
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Enter parent category name" 
+            (keyup.enter)="createNewCategory(category)"/>
+          <span *ngIf="!category.isNew">{{ category.parentName }}</span>
+        </th>
+
+        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+          <input *ngIf="category.isNew" [(ngModel)]="category.categoryName" 
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Enter category name" 
+            (keyup.enter)="createNewCategory(category)"/>
+          <span *ngIf="!category.isNew">{{ category.categoryName }}</span>
+        </th>
+
+        <ng-container *ngFor="let month of months; let j = index">
+          <td (contextmenu)="openContextMenu($event, i, j)" class="px-6 py-4">
+            <input [(ngModel)]="category.values[j]" (keydown)="handleNavigation($event, i, j)"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            <div *ngIf="contextMenuVisible" [style.top]="contextMenuPosition.y" [style.left]="contextMenuPosition.x"
+              class="absolute bg-white border shadow-lg p-2">
+              <button (click)="applyToAll(i, j)">Apply to All</button>
+            </div>
+          </td>
+        </ng-container>
+
+        <td class="px-6 py-4">{{ calculateRowTotal(category) }}</td>
+      </tr>
+
+    </tbody>
+
+    <tfoot>
+      <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+        <td class="px-6 py-4">Subtotal</td>
+        <td *ngFor="let month of months; let j = index" class="px-6 py-4">{{ getColumnSubtotal(j) }}</td>
+        <td class="px-6 py-4">{{ getOverallTotal() }}</td>
+      </tr>
+    </tfoot>
+
+  </table>
+
+  <div class="mb-4 mt-4 flex flex-row items-center">
+    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start Month:</label>
+    <select [(ngModel)]="selectedStartMonth" (change)="updateMonthRange()"
+      class="ml-2 w-80 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+      <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+    </select>
+  
+    <label class="block mb-2 ml-4 text-sm font-medium text-gray-900 dark:text-white">End Month:</label>
+    <select [(ngModel)]="selectedEndMonth" (change)="updateMonthRange()"
+      class="ml-2 w-80 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+      <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+    </select>
+  </div>
+</div> -->
+
+<div class="overflow-x-auto">
+  <table class="min-w-full border-collapse">
+    <thead>
+      <tr>
+        <th class="border px-4 py-2">Category</th>
+        <th *ngFor="let month of months" class="border px-4 py-2">{{ month }}</th>
+        <th class="border px-4 py-2">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let category of incomeCategories; let i = index">
+        <tr>
+          <td class="border px-4 py-2">{{ category.name }}</td>
+          <td (contextmenu)="openContextMenu($event, category.amounts[j])" *ngFor="let month of months; let j = index" class="border px-4 py-2">
+            <input type="text" [(ngModel)]="category.amounts[j]" (keydown.enter)="addNewRow()">
+          </td>
+          <td>
+            <button (click)="deleteRow(i)">Delete</button>
+          </td>
+        </tr>
+      </ng-container>
+      <tr>
+        <td class="border px-4 py-2 font-bold">Income Total</td>
+        <td *ngFor="let total of incomeTotals" class="border px-4 py-2 font-bold">{{ total }}</td>
+      </tr>
+
+      <ng-container *ngFor="let category of expenseCategories; let i = index">
+        <tr>
+          <td class="border px-4 py-2">{{ category.name }}</td>
+          <td (contextmenu)="openContextMenu($event, category.amounts[j])" *ngFor="let month of months; let j = index" class="border px-4 py-2">
+            <input type="text" [(ngModel)]="category.amounts[j]" (keydown.enter)="addNewRow()">
+          </td>
+        </tr>
+        <td>
+          <button (click)="deleteRow(i)">Delete</button>
+        </td>
+      </ng-container>
+
+      <tr>
+        <td class="border px-4 py-2 font-bold">Expense Total </td>
+        <td *ngFor="let total of expenseTotals" class="border px-4 py-2 font-bold">{{ total }}</td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+
