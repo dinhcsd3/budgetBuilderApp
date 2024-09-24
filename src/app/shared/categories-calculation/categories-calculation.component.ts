@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { MONTHS_OF_YEAR } from '../core/constants/months-of-year.constant';
+import { Component, Input } from '@angular/core';
+import { MONTHS_OF_YEAR } from '../../core/constants/months-of-year.constant';
 import { FormsModule } from '@angular/forms';
-import { Category } from '../core/models/category.model';
-import { KeyCategoryEnum } from '../core/enums/key-category.enum';
-import { MonthOfYearEnum } from '../core/enums/months-of-year.enum';
-import { KeyboardControlEnum } from '../core/enums/keyboard-control.enum';
+import { Category } from '../../core/models/category.model';
+import { KeyCategoryEnum } from '../../core/enums/key-category.enum';
+import { MonthOfYearEnum } from '../../core/enums/months-of-year.enum';
+import { KeyboardControlEnum } from '../../core/enums/keyboard-control.enum';
 
 @Component({
   selector: 'avnon-categories-calculation',
@@ -17,25 +17,14 @@ import { KeyboardControlEnum } from '../core/enums/keyboard-control.enum';
 })
 export class CategoriesCalculationComponent {
 
-  public months: string[] = MONTHS_OF_YEAR;
-  public categories: Category[] = [
-    {
-      categoryName: KeyCategoryEnum.Income,
-      values: Array(this.months.length).fill(0),
-      isParentCategory: true,
-      isNew: false
-    },
-    {
-      categoryName: '',
-      values: Array(this.months.length).fill(0),
-      isParentCategory: true,
-      isNew: true
-    }
-  ];
+  @Input() keyCategory: KeyCategoryEnum = KeyCategoryEnum.Income;
+  @Input() months: string[] = [];
+  @Input() categories: Category[] = [];
 
   public contextMenuVisible: boolean = false;
   public contextMenuPosition = { x: '0px', y: '0px' };
 
+  public readonly monthsSelectOptions = MONTHS_OF_YEAR;
   public selectedStartMonth = MonthOfYearEnum.January;
   public selectedEndMonth = MonthOfYearEnum.December;
 
@@ -80,7 +69,7 @@ export class CategoriesCalculationComponent {
   }
 
   public calculateRowTotal(category: Category): number {
-    return category.values?.reduce((a, b) => a + b, 0);
+    return category.values.map(value => +value).reduce((sum, value) => sum + value, 0);
   }
 
   public openContextMenu(event: MouseEvent, rowIndex: number, colIndex: number): void {
@@ -108,11 +97,15 @@ export class CategoriesCalculationComponent {
   }
 
   public getColumnSubtotal(colIndex: number): number {
-    return this.categories.reduce((sum, category) => sum + category.values[colIndex], 0);
+    return this.categories.map(category => +category.values[colIndex]).reduce((sum, value) => sum + value, 0);
   }
 
   public getOverallTotal(): number {
     return this.categories.reduce((sum, category) => sum + this.calculateRowTotal(category), 0);
+  }
+
+  public deleteCategoryRow(rowIndex: number): void {
+    this.categories.splice(rowIndex, 1);
   }
 
 }
